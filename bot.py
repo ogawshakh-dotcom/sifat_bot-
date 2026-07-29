@@ -207,10 +207,28 @@ def get_student(message):
     msg = bot.send_message(message.chat.id, "💥 Ish tajribangiz qanday?", reply_markup=markup, parse_mode="Markdown")
     bot.register_next_step_handler(msg, get_experience)
 
+# ISH TAJRIBASIDAN KEYIN SMENA SO'RALADI
 def get_experience(message):
     if check_cancel(message): return
     user_data[message.chat.id]['experience'] = message.text
     
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+    markup.row("✅ 07:00-15:00", "✅ 15:00-00:00")
+    markup.row("❌ Bekor qilish")
+    
+    msg = bot.send_message(
+        message.chat.id, 
+        "⏰ Qaysi smenada ishlay olasiz?", 
+        reply_markup=markup, 
+        parse_mode="Markdown"
+    )
+    bot.register_next_step_handler(msg, get_smena)
+
+# YANGI SMENA BOSQICHI
+def get_smena(message):
+    if check_cancel(message): return
+    user_data[message.chat.id]['smena'] = message.text
+
     msg = bot.send_message(
         message.chat.id, 
         "💡 Rasmingizni yuklang:\n(Nomzodni aniqlash uchun kerak)", 
@@ -237,7 +255,8 @@ def get_photo(message):
         f"🏡 Manzil: {d.get('address')}\n"
         f"👨/👩 Jinsi: {d.get('gender')}\n"
         f"👨‍🎓 Talabami: {d.get('student')}\n"
-        f"💥 Tajriba: {d.get('experience')}\n\n"
+        f"💥 Tajriba: {d.get('experience')}\n"
+        f"⏰ Smena: {d.get('smena')}\n\n"
         f"Barcha ma'lumotlar to'g'rimi?"
     )
 
@@ -273,6 +292,7 @@ def confirm_and_send(message):
             f"👨/👩 Jinsi: {data.get('gender', '')}\n"
             f"👨‍🎓 Talabami: {data.get('student', '')}\n"
             f"💥 Tajriba: {data.get('experience', '')}\n"
+            f"⏰ Smena: {data.get('smena', '')}\n"
             f"🔗 Profil: {username_val}\n"
             f"🆔 ID: {applicant_id}"
         )
