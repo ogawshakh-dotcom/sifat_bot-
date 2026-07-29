@@ -1,7 +1,12 @@
 import os
+import telebot
+from telebot import types
 from flask import Flask
 from threading import Thread
 
+# ==========================================
+# 🌐 FLASK SERVER (Render uchun)
+# ==========================================
 app = Flask('')
 
 @app.route('/')
@@ -14,11 +19,8 @@ def run():
 
 def keep_alive():
     t = Thread(target=run)
+    t.daemon = True
     t.start()
-
-keep_alive()
-import telebot
-from telebot import types
 
 # ==========================================
 # ⚙️ SOZLAMALAR
@@ -412,7 +414,11 @@ def show_stats(message):
 def back_main(message):
     bot.send_message(message.chat.id, "Asosiy menyu:", reply_markup=main_keyboard(message.from_user.id))
 
+# ==================== BOTNI ISHGA TUSHIRISH ====================
 if __name__ == '__main__':
+    # Flask serverni alohida fonda yurgazamiz
+    keep_alive()
+    
     print("SIFAT SUPERMARKET HR Bot tayyor va ishlamoqda...")
     bot.infinity_polling(timeout=20, long_polling_timeout=10, skip_pending=True)
     
