@@ -1,3 +1,22 @@
+import os
+from flask import Flask
+from threading import Thread
+
+app = Flask('')
+
+@app.route('/')
+def home():
+    return "Bot status: OK"
+
+def run():
+    port = int(os.environ.get("PORT", 8080))
+    app.run(host='0.0.0.0', port=port)
+
+def keep_alive():
+    t = Thread(target=run)
+    t.start()
+
+keep_alive()
 import telebot
 from telebot import types
 
@@ -376,4 +395,4 @@ def back_main(message):
 if __name__ == '__main__':
     print("SIFAT SUPERMARKET HR Bot tayyor va ishlamoqda...")
     bot.infinity_polling(timeout=20, long_polling_timeout=10, skip_pending=True)
-                                       
+    
